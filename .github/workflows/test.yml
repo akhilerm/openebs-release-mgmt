@@ -23,5 +23,5 @@ jobs:
           release_name: ${{ github.ref }}
           draft: false
           body: Release created via release action from linux-utils
-          prerelease: trueorfalse
-          commitish: branchname
+          prerelease: false
+#          commitish: branchname
