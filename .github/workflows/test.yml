@@ -1,24 +1,23 @@
-name: 'build-test'
-on: # rebuild any PRs and main branch changes
-  pull_request:
-  push:
-    branches:
-      - main
-      - 'releases/*'
+name: 'Release Test'
+on:
+  create:
+    tags:
+      - 'v*'
 
 jobs:
-  build: # make sure build/ci work properly
+  downstream-releases:
+    name: Create Downstream tags
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: |
-          npm install
-      - run: |
-          npm run all
-  test: # make sure the action works on a clean machine without building
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./
+      - name: Print Info
+        run: |
+          echo ${{ github.ref }}
+
+      - name: Release Repo1
+        uses: akhilerm/release-mgmt@main
         with:
-          milliseconds: 1000
+          tag-name: ${{ github.ref }}
+          body: 'Release created from release-mgmt'
+          repo: |
+            release-test
+          github-token: ${{ secrets.RELEASE_TOKEN }}
