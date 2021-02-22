@@ -24,4 +24,4 @@ jobs:
           draft: false
           body: Release created via release action from linux-utils
           prerelease: false
-#          commitish: branchname
+          commitish: main
