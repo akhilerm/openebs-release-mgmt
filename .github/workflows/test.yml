@@ -19,8 +19,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           repo: akhilerm/release-mgmt
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
+          tag_name: refs/tags/v0.0.8
+          release_name: test release 0.0.8
           draft: false
           body: Release created via release action from linux-utils
           prerelease: false
