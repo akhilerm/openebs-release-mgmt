@@ -18,8 +18,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          tag_name: refs/tags/v0.0.8
-          release_name: test release 0.0.8
+          tag_name: refs/tags/v0.0.11
+          release_name: test release 0.0.11
           draft: false
           body: Release created via release action from linux-utils
           prerelease: false
