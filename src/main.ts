@@ -1,19 +1,34 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import * as github from '@actions/github'
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+    const token = core.getInput('token')
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    // Get authenticated GitHub client
+    const octokit = github.getOctokit(token)
 
-    core.setOutput('time', new Date().toTimeString())
+    // Get the inputs from the workflow file: https://github.com/actions/toolkit/tree/master/packages/core#inputsoutputs
+    const tagName = core.getInput('tag_name', {required: true})
+
+    // This removes the 'refs/tags' portion of the string, i.e. from 'refs/tags/v1.10.15' to 'v1.10.15'
+    const tag = tagName.replace('refs/tags/', '')
+
+    const body = core.getInput('body', {required: true})
+
+    const r = await octokit.repos.createRelease({
+      owner: 'akhilerm',
+      repo: 'release-test',
+      body: body,
+      tag_name: tag,
+      target_commitish: 'main',
+      prerelease: false,
+      draft: false
+    })
+    core.info(JSON.stringify(r))
   } catch (error) {
     core.setFailed(error.message)
   }
 }
 
-run()
+run();
