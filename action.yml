@@ -2,10 +2,15 @@ name: 'Your name here'
 description: 'Provide a description here'
 author: 'Your name or organization here'
 inputs:
-  milliseconds: # change this
+  token:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'git9hub token'
+  tag_name:
+    required: true
+    description: 'release tag'
+  body:
+    required: true
+    description: 'body of release'
 runs:
   using: 'node12'
   main: 'dist/index.js'
