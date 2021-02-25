@@ -16,6 +16,8 @@ jobs:
       - name: Release Repo1
         uses: akhilerm/release-mgmt@main
         with:
-          token: ${{ secrets.RELEASE_TOKEN }}
-          tag_name: ${{ github.ref }}
-          body: 'Released from release-mgmt'
+          tag-name: ${{ github.ref }}
+          body: 'Release created from release-mgmt'
+          repo: |
+            release-test
+          github-token: ${{ secrets.RELEASE_TOKEN }}

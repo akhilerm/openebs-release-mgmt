@@ -2,15 +2,22 @@ name: 'Your name here'
 description: 'Provide a description here'
 author: 'Your name or organization here'
 inputs:
-  token:
+  github-token:
     required: true
     description: 'git9hub token'
+  owner:
+    required: false
+    description: 'The owner of the repo'
+    default: '${{ github.repository_owner }}'
   tag_name:
     required: true
     description: 'release tag'
   body:
     required: true
     description: 'body of release'
+  repo:
+    required: true
+    description: 'List of repositories for which the release is to be created'
 runs:
   using: 'node12'
   main: 'dist/index.js'
