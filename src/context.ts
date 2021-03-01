@@ -19,13 +19,13 @@ export async function getInputs(): Promise<Inputs> {
     };
 }
 
-function getTag(): string {
+export function getTag(): string {
     const tagName = core.getInput('tag-name');
     // This removes the 'refs/tags' portion of the string if present, i.e. from 'refs/tags/v1.10.15' to 'v1.10.15'
    return tagName.replace('refs/tags/', '');
 }
 
-async function getRepositoryList(): Promise<string[]> {
+export async function getRepositoryList(): Promise<string[]> {
     let res: Array<string> = [];
 
     const items = core.getInput('repo');
