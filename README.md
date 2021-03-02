@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create Downstream release
-        uses: akhilerm/release-mgmt@main
+        uses: akhilerm/openebs-release-mgmt@main
         with:
           tag-name: ${{ github.ref }}
           body: 'Release created from linux utils'
@@ -37,4 +37,4 @@ jobs:
 
 `RELEASE_TOKEN` should have write access to the repository
 
-Repositories will be searched under the same user / org
+Repositories will be searched under the same user / org for tagging
