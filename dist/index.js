@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getInputs = void 0;
+exports.getRepositoryList = exports.getTag = exports.getInputs = void 0;
 const core = __importStar(__webpack_require__(2186));
 const sync_1 = __importDefault(__webpack_require__(8750));
 function getInputs() {
@@ -49,7 +49,8 @@ function getInputs() {
             body: core.getInput('body'),
             repositories: yield getRepositoryList(),
             owner: core.getInput('owner'),
-            githubToken: core.getInput('github-token')
+            githubToken: core.getInput('github-token'),
+            failFast: /true/i.test(core.getInput('fail-fast'))
         };
     });
 }
@@ -59,6 +60,7 @@ function getTag() {
     // This removes the 'refs/tags' portion of the string if present, i.e. from 'refs/tags/v1.10.15' to 'v1.10.15'
     return tagName.replace('refs/tags/', '');
 }
+exports.getTag = getTag;
 function getRepositoryList() {
     return __awaiter(this, void 0, void 0, function* () {
         let res = [];
@@ -81,6 +83,7 @@ function getRepositoryList() {
         return res.filter(item => item).map(pat => pat.trim());
     });
 }
+exports.getRepositoryList = getRepositoryList;
 
 
 /***/ }),
@@ -237,7 +240,15 @@ function createRelease(ctx) {
                 draft: false
             });
             if (result.status != 201) {
-                core.setFailed(`Creating release failed for ${ctx.owner}/${repo}`);
+                core.error(`Creating release failed for ${ctx.owner}/${repo}`);
+                // when failFast is set, if tagging of one repository fails, all the further
+                // repository tagging is cancelled
+                if (ctx.failFast) {
+                    core.setFailed(`Aborting release tagging..`);
+                }
+            }
+            else {
+                core.info(`Created release ${ctx.tagName} for ${ctx.owner}/${repo}`);
             }
         }
     });

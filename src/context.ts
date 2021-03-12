@@ -7,6 +7,7 @@ export interface Inputs {
   repositories: string[];
   owner: string;
   githubToken: string;
+  failFast: boolean; 
 }
 
 export async function getInputs(): Promise<Inputs> {
@@ -15,7 +16,8 @@ export async function getInputs(): Promise<Inputs> {
       body: core.getInput('body'),
       repositories: await getRepositoryList(),
       owner: core.getInput('owner'),
-      githubToken: core.getInput('github-token')
+      githubToken: core.getInput('github-token'),
+      failFast: /true/i.test(core.getInput('fail-fast'))
     };
 }
 
