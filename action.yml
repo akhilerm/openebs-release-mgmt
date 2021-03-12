@@ -18,6 +18,10 @@ inputs:
   repo:
     required: true
     description: 'List of repositories for which the release is to be created'
+  fail-fast:
+    required: false
+    description: 'Abort the release tagging for further repos if release creation fails in any previous repo'
+    default: 'false'
 runs:
   using: 'node12'
   main: 'dist/index.js'

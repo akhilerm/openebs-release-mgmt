@@ -19,7 +19,12 @@ export async function createRelease(ctx: context.Inputs) {
       draft: false
     });
     if (result.status != 201) {
-      core.setFailed(`Creating release failed for ${ctx.owner}/${repo}`);
+      core.error(`Creating release failed for ${ctx.owner}/${repo}`);
+      // when failFast is set, if tagging of one repository fails, all the further
+      // repository tagging is cancelled
+      if (ctx.failFast) {
+      	core.setFailed(`Aborting release tagging..`);
+      }
     }
     else {
       core.info(`Created release ${ctx.tagName} for ${ctx.owner}/${repo}`);
