@@ -4,7 +4,7 @@ author: 'Your name or organization here'
 inputs:
   github-token:
     required: true
-    description: 'git9hub token'
+    description: 'github token'
   owner:
     required: false
     description: 'The owner of the repo'
