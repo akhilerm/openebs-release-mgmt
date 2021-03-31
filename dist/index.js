@@ -254,7 +254,7 @@ function createRelease(ctx) {
             }
             catch (error) {
                 const errBody = JSON.parse(error);
-                core.info(`error while creating release" ${errBody}`);
+                core.info(`error while creating release json" ${errBody}`);
             }
         }
     });
