@@ -65,7 +65,7 @@ export async function createRelease(ctx: context.Inputs) {
 // checks if the release tag already exists
 function isReleaseAlreadyExist(error: any): boolean {
   return (
-    error.errors.length === 1 &&
+    //error.errors.length === 1 &&
     error.message === 'Validation Failed' &&
     error.errors[0].resource === 'Release' &&
     error.errors[0].code === 'already_exists'
