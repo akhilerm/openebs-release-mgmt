@@ -5,15 +5,14 @@ on: ['push']
 jobs:
   test:
     name: Test release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - name: TAgging
-        uses: akhilerm@openebs-release-mgmt@test-fail-fast
+        uses: akhilerm/openebs-release-mgmt@test-fail-fast
         with:
           tag-name: v0.1.4
           body: 'Release created from nektos-act'
           repo: |
             akhilerm/release-test
-          # GR_TOKEN secret is the access token to perform github releases
-          token: ${{ secrets.TOKEN }}
+          github-token: ${{ secrets.TOKEN }}
 
