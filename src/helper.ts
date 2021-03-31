@@ -8,27 +8,27 @@
 // v1.9.0-custom => should be v1.9.x-custom
 // v1.9.1-custom => should be v1.9.x-custom
 export function getBranchName(tag: string): string {
-    const t = tag.split('-')
-    const semanticVersion = t[0].split('.')
-    let branch = `${semanticVersion[0]}.${semanticVersion[1]}.x`
-    if (t[1]) {
-        if (!isRCBuild(tag)) {
-            branch = `${branch}-${t[1]}`
-        }
+  const t = tag.split('-')
+  const semanticVersion = t[0].split('.')
+  let branch = `${semanticVersion[0]}.${semanticVersion[1]}.x`
+  if (t[1]) {
+    if (!isRCBuild(tag)) {
+      branch = `${branch}-${t[1]}`
     }
-    return branch
+  }
+  return branch
 }
 
 // checks if the given tag corresponds to an RC build
 export function isRCBuild(tag: string): boolean {
-    const t = tag.split('-')
+  const t = tag.split('-')
 
-    // take the last custom suffix
-    // can be v0.0.1-RC1 or v0.0.1-custom-RC1
-    const tagSuffix = t[t.length - 1]
+  // take the last custom suffix
+  // can be v0.0.1-RC1 or v0.0.1-custom-RC1
+  const tagSuffix = t[t.length - 1]
 
-    if (tagSuffix.substr(0, 2) === 'RC') {
-        return true
-    }
-    return false
+  if (tagSuffix.substr(0, 2) === 'RC') {
+    return true
+  }
+  return false
 }

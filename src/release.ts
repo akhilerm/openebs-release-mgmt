@@ -7,6 +7,10 @@ export async function createRelease(ctx: context.Inputs) {
   const octokit = github.getOctokit(ctx.githubToken)
   const branchName = helper.getBranchName(ctx.tagName)
   const preRelease = helper.isRCBuild(ctx.tagName)
+
+  let isSuccess = true
+  let failureMessage = `Tagging failed for: `
+
   for (const repo of ctx.repositories) {
     try {
       const result = await octokit.repos.createRelease({
@@ -23,22 +27,42 @@ export async function createRelease(ctx: context.Inputs) {
       if (result.status === 201) {
         core.info(`Created release for ${ctx.owner}/${repo}`)
       } else {
-        core.setFailed(`Release creation failed`)
-      }
-      /* if (result.status != 201) {
-        core.error(`Creating release failed for ${ctx.owner}/${repo}`);
-        // when failFast is set, if tagging of one repository fails, all the further
-        // repository tagging is cancelled
         if (ctx.failFast) {
-          core.setFailed(`Aborting release tagging..`);
+          core.setFailed(
+            `Tagging failed for ${ctx.owner}/${repo}. Aborting tagging for further repositories`
+          )
+          return
+        } else {
+          isSuccess = false
+          failureMessage = failureMessage.concat(`${repo}, `)
         }
-      }*/
+      }
     } catch (error) {
-      for (let i = 0; i < error.errors.length; i++) {
-        if (error.errors[i].code === 'already_exists') {
-          core.info(`Already exist error validation message`)
+      if (!isReleaseAlreadyExist(error)) {
+        if (ctx.failFast) {
+          core.setFailed(
+            `Tagging failed for ${ctx.owner}/${repo}. Aborting tagging for further repositories`
+          )
+          return
+        } else {
+          isSuccess = false
+          failureMessage = failureMessage.concat(`${repo}, `)
         }
       }
     }
   }
+
+  if (!isSuccess) {
+    core.setFailed(failureMessage)
+  }
+}
+
+// checks if the release tag already exists
+function isReleaseAlreadyExist(error: any): boolean {
+  return (
+    error.errors.length === 1 &&
+    error.message === 'Validation Failed' &&
+    error.errors[0].resource === 'Release' &&
+    error.errors[0].code === 'already_exists'
+  )
 }

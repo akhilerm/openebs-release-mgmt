@@ -63,12 +63,12 @@ function getTag() {
 exports.getTag = getTag;
 function getRepositoryList() {
     return __awaiter(this, void 0, void 0, function* () {
-        let res = [];
+        const res = [];
         const items = core.getInput('repo');
         if (items == '') {
             return res;
         }
-        for (let output of (yield sync_1.default(items, {
+        for (const output of (yield sync_1.default(items, {
             columns: false,
             relaxColumnCount: true,
             skipLinesWithEmptyValues: true
@@ -228,6 +228,8 @@ function createRelease(ctx) {
         const octokit = github.getOctokit(ctx.githubToken);
         const branchName = helper.getBranchName(ctx.tagName);
         const preRelease = helper.isRCBuild(ctx.tagName);
+        let isSuccess = true;
+        let failureMessage = `Tagging failed for: `;
         for (const repo of ctx.repositories) {
             try {
                 const result = yield octokit.repos.createRelease({
@@ -244,28 +246,42 @@ function createRelease(ctx) {
                     core.info(`Created release for ${ctx.owner}/${repo}`);
                 }
                 else {
-                    core.setFailed(`Release creation failed`);
+                    if (ctx.failFast) {
+                        core.setFailed(`Tagging failed for ${ctx.owner}/${repo}. Aborting tagging for further repositories`);
+                        return;
+                    }
+                    else {
+                        isSuccess = false;
+                        failureMessage = failureMessage.concat(`${repo}, `);
+                    }
                 }
-                /* if (result.status != 201) {
-                  core.error(`Creating release failed for ${ctx.owner}/${repo}`);
-                  // when failFast is set, if tagging of one repository fails, all the further
-                  // repository tagging is cancelled
-                  if (ctx.failFast) {
-                    core.setFailed(`Aborting release tagging..`);
-                  }
-                }*/
             }
             catch (error) {
-                for (let i = 0; i < error.errors.length; i++) {
-                    if (error.errors[i].code === 'already_exists') {
-                        core.info(`Already exist error validation message`);
+                if (!isReleaseAlreadyExist(error)) {
+                    if (ctx.failFast) {
+                        core.setFailed(`Tagging failed for ${ctx.owner}/${repo}. Aborting tagging for further repositories`);
+                        return;
+                    }
+                    else {
+                        isSuccess = false;
+                        failureMessage = failureMessage.concat(`${repo}, `);
                     }
                 }
             }
         }
+        if (!isSuccess) {
+            core.setFailed(failureMessage);
+        }
     });
 }
 exports.createRelease = createRelease;
+// checks if the release tag already exists
+function isReleaseAlreadyExist(error) {
+    return (error.errors.length === 1 &&
+        error.message === 'Validation Failed' &&
+        error.errors[0].resource === 'Release' &&
+        error.errors[0].code === 'already_exists');
+}
 
 
 /***/ }),
