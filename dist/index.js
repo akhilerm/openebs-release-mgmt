@@ -219,7 +219,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createRelease = void 0;
+exports.isReleaseAlreadyExist = exports.createRelease = void 0;
 const github = __importStar(__webpack_require__(5438));
 const helper = __importStar(__webpack_require__(3947));
 const core = __importStar(__webpack_require__(2186));
@@ -258,7 +258,7 @@ function createRelease(ctx) {
                 }
             }
             catch (error) {
-                core.info(`release exust: ` + isReleaseAlreadyExist(error));
+                core.info(`release exist: ` + isReleaseAlreadyExist(error));
                 if (!isReleaseAlreadyExist(error)) {
                     if (ctx.failFast) {
                         core.setFailed(`Tagging failed for ${ctx.owner}/${repo}. Error: ${error}`);
@@ -283,12 +283,12 @@ function createRelease(ctx) {
 exports.createRelease = createRelease;
 // checks if the release tag already exists
 function isReleaseAlreadyExist(error) {
-    return (
-    //error.errors.length === 1 &&
-    error.message === 'Validation Failed' &&
+    return (error.errors.length === 1 &&
+        error.message === 'Validation Failed' &&
         error.errors[0].resource === 'Release' &&
         error.errors[0].code === 'already_exists');
 }
+exports.isReleaseAlreadyExist = isReleaseAlreadyExist;
 
 
 /***/ }),
