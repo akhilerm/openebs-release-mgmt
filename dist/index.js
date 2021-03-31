@@ -253,8 +253,8 @@ function createRelease(ctx) {
                 }
             }
             catch (error) {
-                const errBody = JSON.parse(error);
-                core.info(`error while creating release json" ${errBody}`);
+                error.toString();
+                core.info(`error while creating release string" ${error}`);
             }
         }
     });
