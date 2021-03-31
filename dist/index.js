@@ -253,9 +253,8 @@ function createRelease(ctx) {
                 }
             }
             catch (error) {
-                const tp = typeof error;
-                core.info(`type of error ${tp}`);
-                core.info(`error while creating release string ${error}`);
+                core.info(`error message ${error.message}`);
+                core.info(`errors ${error.errors[0]}`);
             }
         }
     });

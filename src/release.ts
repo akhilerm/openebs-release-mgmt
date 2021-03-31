@@ -34,10 +34,11 @@ export async function createRelease(ctx: context.Inputs) {
         core.info(`Created release ${ctx.tagName} for ${ctx.owner}/${repo}`);
       }
     }
-    catch (error: unknown) {
-      const tp = typeof error;
-      core.info(`type of error ${tp}`);
-      core.info(`error while creating release string ${error}`);
+    catch (error) {
+      core.info(`error message ${error.message}`);
+
+      core.info(`errors ${error.errors[0]}`);
+
     }
 
   }
