@@ -35,8 +35,9 @@ export async function createRelease(ctx: context.Inputs) {
       }
     }
     catch (error: unknown) {
-      core.info(`type of error` + typeof error)
-      core.info(`error while creating release string" ${error}`);
+      const tp = typeof error;
+      core.info(`type of error ${tp}`);
+      core.info(`error while creating release string ${error}`);
     }
 
   }

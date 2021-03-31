@@ -253,8 +253,9 @@ function createRelease(ctx) {
                 }
             }
             catch (error) {
-                core.info(`type of error` + typeof error);
-                core.info(`error while creating release string" ${error}`);
+                const tp = typeof error;
+                core.info(`type of error ${tp}`);
+                core.info(`error while creating release string ${error}`);
             }
         }
     });
