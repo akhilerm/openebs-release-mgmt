@@ -259,13 +259,16 @@ function createRelease(ctx) {
             catch (error) {
                 if (!isReleaseAlreadyExist(error)) {
                     if (ctx.failFast) {
-                        core.setFailed(`Tagging failed for ${ctx.owner}/${repo}. Aborting tagging for further repositories`);
+                        core.setFailed(`Tagging failed for ${ctx.owner}/${repo}. Error: ${error} \n Aborting tagging for further repositories`);
                         return;
                     }
                     else {
                         isSuccess = false;
                         failureMessage = failureMessage.concat(`${repo}, `);
                     }
+                }
+                else {
+                    core.info(`Release tag ${ctx.tagName} already exists for ${ctx.owner}/${repo}`);
                 }
             }
         }
