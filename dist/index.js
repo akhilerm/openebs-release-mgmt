@@ -253,7 +253,7 @@ function createRelease(ctx) {
                 }
             }
             catch (error) {
-                error.toString();
+                core.info(`type of error` + typeof error);
                 core.info(`error while creating release string" ${error}`);
             }
         }
