@@ -229,27 +229,31 @@ function createRelease(ctx) {
         const branchName = helper.getBranchName(ctx.tagName);
         const preRelease = helper.isRCBuild(ctx.tagName);
         for (const repo of ctx.repositories) {
-            const result = yield octokit.repos.createRelease({
-                owner: ctx.owner,
-                repo: repo,
-                tag_name: ctx.tagName,
-                name: ctx.tagName,
-                body: ctx.body,
-                target_commitish: branchName,
-                prerelease: preRelease,
-                draft: false
-            });
-            console.log(result);
-            if (result.status != 201) {
-                core.error(`Creating release failed for ${ctx.owner}/${repo}`);
-                // when failFast is set, if tagging of one repository fails, all the further
-                // repository tagging is cancelled
-                if (ctx.failFast) {
-                    core.setFailed(`Aborting release tagging..`);
+            try {
+                const result = yield octokit.repos.createRelease({
+                    owner: ctx.owner,
+                    repo: repo,
+                    tag_name: ctx.tagName,
+                    name: ctx.tagName,
+                    body: ctx.body,
+                    target_commitish: branchName,
+                    prerelease: preRelease,
+                    draft: false
+                });
+                if (result.status != 201) {
+                    core.error(`Creating release failed for ${ctx.owner}/${repo}`);
+                    // when failFast is set, if tagging of one repository fails, all the further
+                    // repository tagging is cancelled
+                    if (ctx.failFast) {
+                        core.setFailed(`Aborting release tagging..`);
+                    }
+                }
+                else {
+                    core.info(`Created release ${ctx.tagName} for ${ctx.owner}/${repo}`);
                 }
             }
-            else {
-                core.info(`Created release ${ctx.tagName} for ${ctx.owner}/${repo}`);
+            catch (error) {
+                core.info(`error while creating release" ${error}`);
             }
         }
     });

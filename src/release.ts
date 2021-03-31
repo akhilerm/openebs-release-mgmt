@@ -9,6 +9,9 @@ export async function createRelease(ctx: context.Inputs) {
   const preRelease = helper.isRCBuild(ctx.tagName);
   for (const repo of ctx.repositories) {
 
+    try {
+
+
     const result = await octokit.repos.createRelease({
       owner: ctx.owner,
       repo: repo,
@@ -19,17 +22,21 @@ export async function createRelease(ctx: context.Inputs) {
       prerelease: preRelease,
       draft: false
     });
-    console.log(result)
-    if (result.status != 201) {
-      core.error(`Creating release failed for ${ctx.owner}/${repo}`);
-      // when failFast is set, if tagging of one repository fails, all the further
-      // repository tagging is cancelled
-      if (ctx.failFast) {
-      	core.setFailed(`Aborting release tagging..`);
+      if (result.status != 201) {
+        core.error(`Creating release failed for ${ctx.owner}/${repo}`);
+        // when failFast is set, if tagging of one repository fails, all the further
+        // repository tagging is cancelled
+        if (ctx.failFast) {
+          core.setFailed(`Aborting release tagging..`);
+        }
+      }
+      else {
+        core.info(`Created release ${ctx.tagName} for ${ctx.owner}/${repo}`);
       }
     }
-    else {
-      core.info(`Created release ${ctx.tagName} for ${ctx.owner}/${repo}`);
+    catch (error) {
+      core.info(`error while creating release" ${error}`);
     }
+
   }
 }
