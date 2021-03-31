@@ -283,6 +283,10 @@ function createRelease(ctx) {
 exports.createRelease = createRelease;
 // checks if the release tag already exists
 function isReleaseAlreadyExist(error) {
+    core.info(`lenght` + error.errors.length);
+    core.info(`message` + error.message);
+    core.info(`resource` + error.errors[0].resource);
+    core.info(`code` + error.errors[0].code);
     return (error.errors.length === 1 &&
         error.message === 'Validation Failed' &&
         error.errors[0].resource === 'Release' &&
