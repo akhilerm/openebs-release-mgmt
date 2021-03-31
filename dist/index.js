@@ -258,7 +258,6 @@ function createRelease(ctx) {
                 }
             }
             catch (error) {
-                core.info(`release exist: ` + isReleaseAlreadyExist(error));
                 if (!isReleaseAlreadyExist(error)) {
                     if (ctx.failFast) {
                         core.setFailed(`Tagging failed for ${ctx.owner}/${repo}. Error: ${error}`);

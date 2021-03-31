@@ -39,7 +39,6 @@ export async function createRelease(ctx: context.Inputs) {
         }
       }
     } catch (error) {
-      core.info(`release exist: ` + isReleaseAlreadyExist(error))
       if (!isReleaseAlreadyExist(error)) {
         if (ctx.failFast) {
           core.setFailed(
