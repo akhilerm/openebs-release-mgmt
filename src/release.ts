@@ -29,7 +29,7 @@ export async function createRelease(ctx: context.Inputs) {
       } else {
         if (ctx.failFast) {
           core.setFailed(
-            `Tagging failed for ${ctx.owner}/${repo}. Aborting tagging for further repositories`
+            `Tagging failed for ${ctx.owner}/${repo}. Error: ${result} \n Aborting tagging for further repositories`
           )
           return
         } else {
