@@ -232,7 +232,7 @@ function createRelease(ctx) {
             try {
                 const result = yield octokit.repos.createRelease({
                     owner: ctx.owner,
-                    repo: repo,
+                    repo,
                     tag_name: ctx.tagName,
                     name: ctx.tagName,
                     body: ctx.body,
@@ -240,23 +240,27 @@ function createRelease(ctx) {
                     prerelease: preRelease,
                     draft: false
                 });
-                if (result.status != 201) {
-                    core.error(`Creating release failed for ${ctx.owner}/${repo}`);
-                    // when failFast is set, if tagging of one repository fails, all the further
-                    // repository tagging is cancelled
-                    if (ctx.failFast) {
-                        core.setFailed(`Aborting release tagging..`);
-                    }
+                if (result.status === 201) {
+                    core.info(`Created release for ${ctx.owner}/${repo}`);
                 }
                 else {
-                    core.info(`Created release ${ctx.tagName} for ${ctx.owner}/${repo}`);
+                    core.setFailed(`Release creation failed`);
                 }
+                /* if (result.status != 201) {
+                  core.error(`Creating release failed for ${ctx.owner}/${repo}`);
+                  // when failFast is set, if tagging of one repository fails, all the further
+                  // repository tagging is cancelled
+                  if (ctx.failFast) {
+                    core.setFailed(`Aborting release tagging..`);
+                  }
+                }*/
             }
             catch (error) {
-                core.info(`error message ${error.message}`);
-                core.info(`error filed ${error.errors[0].field}`);
-                core.info(`errors reource  ${error.errors[0].resource}`);
-                core.info(`errors  code ${error.errors[0].code}`);
+                for (let i = 0; i < error.errors.length; i++) {
+                    if (error.errors[i].code === 'already_exists') {
+                        core.info(`Already exist error validation message`);
+                    }
+                }
             }
         }
     });
