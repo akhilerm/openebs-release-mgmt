@@ -31,7 +31,7 @@ jobs:
             maya
             jiva
             node-disk-manager
-          token: ${{ secrets.RELEASE_TOKEN }}
+          github-token: ${{ secrets.RELEASE_TOKEN }}
   
 ```
 
