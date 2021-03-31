@@ -1,17 +1,19 @@
 name: 'Release Test'
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: ['push']
 
 jobs:
-  unit-test:
-    name: Unit Test
+  test:
+    name: Test release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: TAgging
+        uses: akhilerm@openebs-release-mgmt@test-fail-fast
+        with:
+          tag-name: v0.1.4
+          body: 'Release created from nektos-act'
+          repo: |
+            akhilerm/release-test
+          # GR_TOKEN secret is the access token to perform github releases
+          token: ${{ secrets.TOKEN }}
+

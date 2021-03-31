@@ -8,6 +8,7 @@ export async function createRelease(ctx: context.Inputs) {
   const branchName = helper.getBranchName(ctx.tagName);
   const preRelease = helper.isRCBuild(ctx.tagName);
   for (const repo of ctx.repositories) {
+
     const result = await octokit.repos.createRelease({
       owner: ctx.owner,
       repo: repo,
@@ -18,6 +19,7 @@ export async function createRelease(ctx: context.Inputs) {
       prerelease: preRelease,
       draft: false
     });
+    console.log(result)
     if (result.status != 201) {
       core.error(`Creating release failed for ${ctx.owner}/${repo}`);
       // when failFast is set, if tagging of one repository fails, all the further

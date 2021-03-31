@@ -239,6 +239,7 @@ function createRelease(ctx) {
                 prerelease: preRelease,
                 draft: false
             });
+            console.log(result);
             if (result.status != 201) {
                 core.error(`Creating release failed for ${ctx.owner}/${repo}`);
                 // when failFast is set, if tagging of one repository fails, all the further
