@@ -29,8 +29,9 @@ export async function createRelease(ctx: context.Inputs) {
       } else {
         if (ctx.failFast) {
           core.setFailed(
-            `Tagging failed for ${ctx.owner}/${repo}. Error: ${result} \n Aborting tagging for further repositories`
+            `Tagging failed for ${ctx.owner}/${repo}. Error: ${result}`
           )
+          core.error(`Aborting tagging for further repositories`)
           return
         } else {
           isSuccess = false
@@ -38,11 +39,13 @@ export async function createRelease(ctx: context.Inputs) {
         }
       }
     } catch (error) {
+      core.info(`release exust: ` + isReleaseAlreadyExist(error))
       if (!isReleaseAlreadyExist(error)) {
         if (ctx.failFast) {
           core.setFailed(
-            `Tagging failed for ${ctx.owner}/${repo}. Error: ${error} \n Aborting tagging for further repositories`
+            `Tagging failed for ${ctx.owner}/${repo}. Error: ${error}`
           )
+          core.error(`Aborting tagging for further repositories`)
           return
         } else {
           isSuccess = false

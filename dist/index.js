@@ -247,7 +247,8 @@ function createRelease(ctx) {
                 }
                 else {
                     if (ctx.failFast) {
-                        core.setFailed(`Tagging failed for ${ctx.owner}/${repo}. Error: ${result} \n Aborting tagging for further repositories`);
+                        core.setFailed(`Tagging failed for ${ctx.owner}/${repo}. Error: ${result}`);
+                        core.error(`Aborting tagging for further repositories`);
                         return;
                     }
                     else {
@@ -257,9 +258,11 @@ function createRelease(ctx) {
                 }
             }
             catch (error) {
+                core.info(`release exust: ` + isReleaseAlreadyExist(error));
                 if (!isReleaseAlreadyExist(error)) {
                     if (ctx.failFast) {
-                        core.setFailed(`Tagging failed for ${ctx.owner}/${repo}. Error: ${error} \n Aborting tagging for further repositories`);
+                        core.setFailed(`Tagging failed for ${ctx.owner}/${repo}. Error: ${error}`);
+                        core.error(`Aborting tagging for further repositories`);
                         return;
                     }
                     else {
