@@ -37,7 +37,9 @@ export async function createRelease(ctx: context.Inputs) {
     catch (error) {
       core.info(`error message ${error.message}`);
 
-      core.info(`errors ${error.errors[0]}`);
+      core.info(`error filed ${error.errors[0].field}`);
+      core.info(`errors reource  ${error.errors[0].resource}`);
+      core.info(`errors  code ${error.errors[0].code}`);
 
     }
 
