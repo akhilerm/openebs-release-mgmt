@@ -1,6 +1,6 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'OpenEBS Release Management'
+description: 'Manages downstream tagging of openebs repositories'
+author: 'akhilerm'
 inputs:
   github-token:
     required: true
